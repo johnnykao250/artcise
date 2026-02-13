@@ -1,11 +1,10 @@
 import type { AuctionResult, SearchParams } from './types';
-import { mockResults } from './mockData';
 
 /**
  * Artcise search — precise matching with taxonomy awareness.
- * Results come from user submissions only (no third-party listing aggregation).
+ * Results come from listings (API) or mock data.
  */
-export function search(params: SearchParams): AuctionResult[] {
+export function search(params: SearchParams, dataSource: AuctionResult[]): AuctionResult[] {
   const { query, category, subcategory, minPrice, maxPrice, sort = 'relevance' } = params;
   const q = query.trim().toLowerCase();
 
@@ -13,7 +12,7 @@ export function search(params: SearchParams): AuctionResult[] {
     return [];
   }
 
-  let results = filterByQuery(mockResults, q);
+  let results = filterByQuery(dataSource, q);
 
   // Taxonomy slugs (e.g. ceramics-pottery, blue-and-white)
   if (category) {
