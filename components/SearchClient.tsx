@@ -1,10 +1,11 @@
 'use client';
 
-import { useState } from 'react';
+import { useState, useCallback } from 'react';
 import { SearchBar } from './SearchBar';
 import { TaxonomyFilters } from './TaxonomyFilters';
 import { SearchResults } from './SearchResults';
 import { search } from '@/lib/search';
+import { getOrCreateGuestId, getSeenIds, addSeenIds, clearSeenIds } from '@/lib/guest';
 import type { AuctionResult } from '@/lib/types';
 
 export function SearchClient() {
@@ -13,26 +14,51 @@ export function SearchClient() {
   const [subcategory, setSubcategory] = useState<string | undefined>();
   const [results, setResults] = useState<AuctionResult[]>([]);
   const [hasSearched, setHasSearched] = useState(false);
+  const [hiddenCount, setHiddenCount] = useState(0); // how many we hid because already seen
 
-  const handleSearch = () => {
+  const handleSearch = useCallback(() => {
     if (!query.trim()) return;
-    const r = search({
+    const guestId = getOrCreateGuestId();
+    const raw = search({
       query: query.trim(),
       category,
       subcategory,
     });
-    setResults(r);
+    const seen = getSeenIds(guestId);
+    const newResults = raw.filter((r) => !seen.has(r.id));
+    const hidden = raw.length - newResults.length;
+    setHiddenCount(hidden);
+    setResults(newResults);
     setHasSearched(true);
-  };
+    if (newResults.length > 0) {
+      addSeenIds(guestId, newResults.map((r) => r.id));
+    }
+  }, [query, category, subcategory]);
 
-  const handleCategoryChange = (cat?: string, sub?: string) => {
+  const handleClearSeen = useCallback(() => {
+    const guestId = getOrCreateGuestId();
+    clearSeenIds(guestId);
+    setHiddenCount(0);
+    if (hasSearched && query.trim()) {
+      handleSearch();
+    }
+  }, [hasSearched, query, handleSearch]);
+
+  const handleCategoryChange = useCallback((cat?: string, sub?: string) => {
     setCategory(cat);
     setSubcategory(sub);
     if (hasSearched && query.trim()) {
-      const r = search({ query: query.trim(), category: cat, subcategory: sub });
-      setResults(r);
+      const guestId = getOrCreateGuestId();
+      const raw = search({ query: query.trim(), category: cat, subcategory: sub });
+      const seen = getSeenIds(guestId);
+      const newResults = raw.filter((r) => !seen.has(r.id));
+      setHiddenCount(raw.length - newResults.length);
+      setResults(newResults);
+      if (newResults.length > 0) {
+        addSeenIds(guestId, newResults.map((r) => r.id));
+      }
     }
-  };
+  }, [hasSearched, query]);
 
   return (
     <div className="space-y-8">
@@ -46,6 +72,9 @@ export function SearchClient() {
         <p className="text-center text-sm text-graphite/70">
           Taxonomy-aware search. Results from Invaluable &amp; LiveAuctioneers.
         </p>
+        <p className="text-center text-xs text-graphite/60">
+          You&apos;re browsing as a guest. Items you&apos;ve seen won&apos;t show again on your next search.
+        </p>
       </div>
 
       <TaxonomyFilters
@@ -58,6 +87,8 @@ export function SearchClient() {
         <SearchResults
           results={results}
           query={query}
+          hiddenCount={hiddenCount}
+          onClearSeen={handleClearSeen}
           sourceUrls={{
             invaluable: `https://www.invaluable.com/search?query=${encodeURIComponent(query)}`,
             liveauctioneers: `https://www.liveauctioneers.com/search/?q=${encodeURIComponent(query)}`,
