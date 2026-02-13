@@ -1,4 +1,4 @@
-export type Source = 'invaluable' | 'liveauctioneers';
+export type Source = 'invaluable' | 'liveauctioneers' | 'submission';
 
 export interface AuctionResult {
   id: string;
@@ -8,8 +8,8 @@ export interface AuctionResult {
   currency?: string;
   priceFormatted?: string;
   imageUrl?: string;
-  source: Source;
-  sourceUrl: string;
+  source?: Source;
+  sourceUrl?: string;
   auctionHouse?: string;
   lotNumber?: string;
   saleDate?: string;

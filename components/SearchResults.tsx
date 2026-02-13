@@ -8,16 +8,9 @@ interface SearchResultsProps {
   query: string;
   hiddenCount?: number;
   onClearSeen?: () => void;
-  sourceUrls?: {
-    invaluable: string;
-    liveauctioneers: string;
-  };
 }
 
-export function SearchResults({ results, query, hiddenCount = 0, onClearSeen, sourceUrls }: SearchResultsProps) {
-  const invaluableUrl = sourceUrls?.invaluable ?? `https://www.invaluable.com/search?query=${encodeURIComponent(query)}`;
-  const liveUrl = sourceUrls?.liveauctioneers ?? `https://www.liveauctioneers.com/search/?q=${encodeURIComponent(query)}`;
-
+export function SearchResults({ results, query, hiddenCount = 0, onClearSeen }: SearchResultsProps) {
   return (
     <div className="space-y-6">
       <div className="flex flex-wrap items-center justify-between gap-4">
@@ -40,26 +33,6 @@ export function SearchResults({ results, query, hiddenCount = 0, onClearSeen, so
               )}
             </p>
           )}
-        </div>
-        <div className="flex gap-3 text-sm">
-          <span className="text-graphite/70">Results from:</span>
-          <a
-            href={invaluableUrl}
-            target="_blank"
-            rel="noopener noreferrer"
-            className="text-sage hover:underline"
-          >
-            Invaluable
-          </a>
-          <span className="text-graphite/40">·</span>
-          <a
-            href={liveUrl}
-            target="_blank"
-            rel="noopener noreferrer"
-            className="text-sage hover:underline"
-          >
-            LiveAuctioneers
-          </a>
         </div>
       </div>
 
@@ -85,17 +58,7 @@ export function SearchResults({ results, query, hiddenCount = 0, onClearSeen, so
                 {' to show them again.'}
               </>
             ) : (
-              <>
-                Try a different query or browse{' '}
-                <a href={invaluableUrl} target="_blank" rel="noopener noreferrer" className="text-sage hover:underline">
-                  Invaluable
-                </a>{' '}
-                or{' '}
-                <a href={liveUrl} target="_blank" rel="noopener noreferrer" className="text-sage hover:underline">
-                  LiveAuctioneers
-                </a>{' '}
-                directly.
-              </>
+              <>Try a different query or submit your own item for identification.</>
             )}
           </p>
         </div>

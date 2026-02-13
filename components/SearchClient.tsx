@@ -70,7 +70,7 @@ export function SearchClient() {
           placeholder="Try: blue and white vases"
         />
         <p className="text-center text-sm text-graphite/70">
-          Taxonomy-aware search. Results from Invaluable &amp; LiveAuctioneers.
+          Taxonomy-aware search for art, antiques &amp; collectibles.
         </p>
         <p className="text-center text-xs text-graphite/60">
           You&apos;re browsing as a guest. Items you&apos;ve seen won&apos;t show again on your next search.
@@ -89,10 +89,6 @@ export function SearchClient() {
           query={query}
           hiddenCount={hiddenCount}
           onClearSeen={handleClearSeen}
-          sourceUrls={{
-            invaluable: `https://www.invaluable.com/search?query=${encodeURIComponent(query)}`,
-            liveauctioneers: `https://www.liveauctioneers.com/search/?q=${encodeURIComponent(query)}`,
-          }}
         />
       )}
 

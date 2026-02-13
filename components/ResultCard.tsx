@@ -7,17 +7,20 @@ interface ResultCardProps {
   result: AuctionResult;
 }
 
-const SOURCE_LABELS = {
+const SOURCE_LABELS: Record<string, string> = {
   invaluable: 'Invaluable',
   liveauctioneers: 'LiveAuctioneers',
-} as const;
+  submission: 'Submission',
+};
 
 export function ResultCard({ result }: ResultCardProps) {
+  const Wrapper = result.sourceUrl ? 'a' : 'div';
+  const wrapperProps = result.sourceUrl
+    ? { href: result.sourceUrl, target: '_blank' as const, rel: 'noopener noreferrer' }
+    : {};
   return (
-    <a
-      href={result.sourceUrl}
-      target="_blank"
-      rel="noopener noreferrer"
+    <Wrapper
+      {...wrapperProps}
       className="group block rounded-xl border border-[var(--border)] bg-white overflow-hidden transition hover:shadow-lg hover:border-sage/40"
     >
       <div className="relative aspect-[4/3] bg-cream">
@@ -34,13 +37,11 @@ export function ResultCard({ result }: ResultCardProps) {
             No image
           </div>
         )}
-        <span
-          className={`absolute top-2 right-2 rounded px-2 py-1 text-xs font-medium ${
-            result.source === 'invaluable' ? 'bg-blue-100 text-blue-800' : 'bg-amber-100 text-amber-800'
-          }`}
-        >
-          {SOURCE_LABELS[result.source]}
-        </span>
+        {result.source && SOURCE_LABELS[result.source] && (
+          <span className="absolute top-2 right-2 rounded px-2 py-1 text-xs font-medium bg-sage/20 text-sage">
+            {SOURCE_LABELS[result.source]}
+          </span>
+        )}
       </div>
       <div className="p-4">
         <h3 className="font-serif text-base font-medium text-ink line-clamp-2 group-hover:text-sage">
@@ -56,6 +57,6 @@ export function ResultCard({ result }: ResultCardProps) {
           <p className="mt-1 text-xs text-graphite/70">Sold {result.saleDate}</p>
         )}
       </div>
-    </a>
+    </Wrapper>
   );
 }

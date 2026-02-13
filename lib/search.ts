@@ -2,11 +2,8 @@ import type { AuctionResult, SearchParams } from './types';
 import { mockResults } from './mockData';
 
 /**
- * Artcise search — precise matching with taxonomy awareness
- * 
- * Data sourcing: For prototype we use mock data.
- * Future: integrate with Invaluable/LiveAuctioneers APIs, Apify scrapers,
- * or partnerships. See lib/dataSources.ts for integration points.
+ * Artcise search — precise matching with taxonomy awareness.
+ * Results come from user submissions only (no third-party listing aggregation).
  */
 export function search(params: SearchParams): AuctionResult[] {
   const { query, category, subcategory, minPrice, maxPrice, sort = 'relevance' } = params;
