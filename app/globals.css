@@ -1,0 +1,25 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+:root {
+  --cream: #faf8f5;
+  --ink: #1a1a1a;
+  --sage: #6b7c6b;
+  --clay: #8b7355;
+  --sandstone: #c4a77d;
+  --graphite: #4a4a4a;
+  --border: #e8e4df;
+}
+
+body {
+  background: var(--cream);
+  color: var(--ink);
+  min-height: 100vh;
+}
+
+@layer utilities {
+  .text-balance {
+    text-wrap: balance;
+  }
+}
