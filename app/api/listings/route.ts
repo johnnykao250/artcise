@@ -92,8 +92,14 @@ export async function POST(request: NextRequest) {
 
     return NextResponse.json({ success: true, id: itemId });
   } catch (e) {
-    const message = e instanceof Error ? e.message : 'Upload failed.';
-    console.error(e);
+    const err = e as Error & { cause?: Error; code?: string };
+    const parts = [
+      err.message,
+      err.cause?.message,
+      err.code ? `[${err.code}]` : '',
+    ].filter(Boolean);
+    const message = parts.length > 0 ? parts.join(' ') : 'Upload failed.';
+    console.error('Listings POST error:', e);
     return NextResponse.json({ error: message }, { status: 500 });
   }
 }
