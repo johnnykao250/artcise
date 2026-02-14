@@ -1,6 +1,9 @@
 import { NextRequest, NextResponse } from 'next/server';
 import { put, list } from '@vercel/blob';
 
+export const dynamic = 'force-dynamic';
+export const runtime = 'nodejs';
+
 const MANIFEST_PATH = 'listings/_manifest.json';
 const LISTINGS_PREFIX = 'listings/';
 
