@@ -57,7 +57,7 @@ export async function POST(request: NextRequest) {
     const ext = image.name.split('.').pop() || 'jpg';
     const pathname = `${LISTINGS_PREFIX}${safeId}.${ext}`;
 
-    const blob = await put(pathname, image, { access: 'public', addRandomSuffix: false, allowOverwrite: true });
+    const blob = await put(pathname, image, { access: 'public', addRandomSuffix: false });
     const imageUrl = blob.url;
 
     const newListing: StoredListing = {
@@ -88,7 +88,6 @@ export async function POST(request: NextRequest) {
       access: 'public',
       contentType: 'application/json',
       addRandomSuffix: false,
-      allowOverwrite: true,
     });
 
     return NextResponse.json({ success: true, id: itemId });
