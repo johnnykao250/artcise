@@ -71,19 +71,19 @@ export async function POST(request: NextRequest) {
 
     const { blobs } = await list({ prefix: LISTINGS_PREFIX, limit: 2000 });
     const manifestBlob = blobs.find((b) => b.pathname === MANIFEST_PATH);
-    let list: StoredListing[] = [];
+    let entries: StoredListing[] = [];
     if (manifestBlob?.url) {
       const res = await fetch(manifestBlob.url);
       if (res.ok) {
         const data = await res.json();
-        list = Array.isArray(data) ? data : [];
+        entries = Array.isArray(data) ? data : [];
       }
     }
-    const existing = list.findIndex((l) => l.id === itemId);
-    if (existing >= 0) list[existing] = newListing;
-    else list.push(newListing);
+    const existing = entries.findIndex((l) => l.id === itemId);
+    if (existing >= 0) entries[existing] = newListing;
+    else entries.push(newListing);
 
-    const manifestBody = JSON.stringify(list);
+    const manifestBody = JSON.stringify(entries);
     await put(MANIFEST_PATH, manifestBody, {
       access: 'public',
       contentType: 'application/json',
