@@ -5,6 +5,8 @@ const nextConfig = {
     remotePatterns: [
       { protocol: 'https', hostname: 'images.unsplash.com', pathname: '/**' },
       { protocol: 'https', hostname: 'images.prismic.io', pathname: '/**' },
+      // Vercel Blob listing images (any store subdomain)
+      { protocol: 'https', hostname: '**.public.blob.vercel-storage.com', pathname: '/**' },
       ...(blobHost ? [{ protocol: 'https', hostname: blobHost, pathname: '/**' }] : []),
     ],
   },
